@@ -1,6 +1,8 @@
 import { z } from 'zod';
 
 const VehicleZodSchema = z.object({
+  _id: z.string().optional(),
+
   model: z.string({
     required_error: 'Model is required',
     invalid_type_error: 'Model must be a string',
