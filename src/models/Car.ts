@@ -3,7 +3,6 @@ import { ICar } from '../interfaces/ICar';
 import MongoModel from './MongoModel';
 
 const carMongooseSchema = new Schema<ICar>({
-  _id: String,
   model: String,
   year: Number,
   color: String,
