@@ -1,6 +1,5 @@
 // template para criação dos testes de cobertura da camada de service
 
-
 import * as sinon from 'sinon';
 import chai from 'chai';
 import { ZodError } from 'zod';
@@ -120,7 +119,7 @@ describe('Car Service', () => {
       expect(errCar.issues[0].message).to.be.equal("Model must be a string");
     });
 
-    it('Year ir required', async () => {
+    it('Year is required', async () => {
       let errCar: any;
       const carMockInvalid = {
         model: 'Ferrari Purosangue',
