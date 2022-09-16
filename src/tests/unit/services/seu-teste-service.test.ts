@@ -8,8 +8,9 @@ import { ErrorTypes } from '../../../errors/catalog';
 import CarModel from '../../../models/Car';
 import CarService from '../../../services/Car';
 import { carMock, carMockWithId, carMockForChange, carMockForChangeWithId } from '../../mocks/carMock';
-import exp from 'constants';
+
 const { expect } = chai;
+const _id = '63248515401474596857ebcc';
 
 describe('Car Service', () => {
   const carModel = new CarModel();
@@ -17,6 +18,21 @@ describe('Car Service', () => {
 
   before(async () => {
     sinon.stub(carModel, 'create').resolves(carMockWithId);
+    sinon.stub(carModel, 'read')
+      .onCall(0).resolves([carMockWithId])
+      .onCall(1).resolves([]);
+
+    sinon.stub(carModel, 'readOne')
+      .onCall(0).resolves(carMockWithId)
+      .onCall(1).resolves(null);
+  
+    sinon.stub(carModel, 'update')
+      .onCall(0).resolves(carMockForChange)
+      .onCall(1).resolves(null);
+
+    sinon.stub(carModel, 'delete')
+      .onCall(0).resolves(carMockWithId)
+      .onCall(1).resolves(null);
   });
 
   after(()=>{
@@ -208,4 +224,99 @@ describe('Car Service', () => {
       expect(errCar.issues[0].message).to.be.equal("Year must be less than or equal to 2022");
     });
   });
+
+  describe('List All Cars', () => {
+    it('success', async () => {
+      const newCar = await carService.read();
+ 
+      expect(newCar).to.be.deep.equal([carMockWithId]);
+    })
+
+    it('empty', async () => {
+      const newCar = await carService.read();
+ 
+      expect(newCar).to.be.deep.equal([]);
+    })
+  });
+
+  describe('searching a car by id', () => {
+    it('success', async () => {
+      const newCar = await carService.readOne(_id);
+ 
+      expect(newCar).to.be.deep.equal(carMockWithId);
+    })
+
+    it('_id not found', async () => {
+      let err: any;
+
+      try {
+        await carService.readOne('IdErrado');
+      } catch (error) {
+        err = error;
+      }
+      
+      expect(err.message).to.be.eq(ErrorTypes.ObjectNotFound);
+    })
+  })
+
+  describe('changing a car', () => {
+    it('success', async () => {
+      const newCar = await carService.update(_id, carMockForChange);
+ 
+      expect(newCar).to.be.deep.equal(carMockForChangeWithId);
+    })
+
+    it('_id not found', async () => {
+      let err: any;
+
+      try {
+        await carService.update('IdErrado', carMockForChange);
+      } catch (error) {
+        err = error;
+      }
+      
+      expect(err.message).to.be.eq(ErrorTypes.ObjectNotFound);
+    })
+
+    it('number of ports cannot be greater than 4', async () => {
+      let errCar: any;
+      const carMockInvalid = {
+        model: 'Ferrari Purosangue',
+        year: 2030,
+        color: 'Red',
+        buyValue: 950000,
+        doorsQty: 8,
+        seatsQty: 4,
+      }
+      
+      try {
+        await carService.update(_id, carMockInvalid);
+      } catch (error: any) {
+        errCar = error;
+      };
+  
+      expect(errCar).to.be.instanceOf(ZodError);
+      expect(errCar.issues[0].message).to.be.equal("Doors quantity must be less than or equal to 4");
+    });
+  })
+
+  describe('excluding a car', () => {
+    it('success', async () => {
+      const newCar = await carService.delete(_id);
+ 
+      expect(newCar).to.be.deep.equal(carMockWithId);
+    })
+
+    it('_id not found', async () => {
+      let err: any;
+
+      try {
+        await carService.delete('IdErrado');
+      } catch (error) {
+        err = error;
+      }
+      
+      expect(err.message).to.be.eq(ErrorTypes.ObjectNotFound);
+    })
+  })
 });

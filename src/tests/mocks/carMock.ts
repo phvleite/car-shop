@@ -30,7 +30,7 @@ const carMockForChange: ICar = {
 
 const carMockForChangeWithId: ICar  & { _id: string } = {
   _id: '63248515401474596857ebcc',
-  model: 'Ferrari Purosangue',
+  model: 'Ferrari Purosangue - SUV',
   year: 2022,
   color: 'Grey',
   buyValue: 985000,

@@ -46,7 +46,7 @@ describe('Car Model', () => {
     });
   })
 
-  describe('reading all cars', () => {
+  describe('List all cars', () => {
     it('success', async () => {
       const newCar = await carModel.read();
  
@@ -60,7 +60,7 @@ describe('Car Model', () => {
     })
   })
 
-  describe('searching a car', () => {
+  describe('searching a car by id', () => {
     it('success', async () => {
       const newCar = await carModel.readOne(_id);
  
@@ -87,7 +87,7 @@ describe('Car Model', () => {
       expect(newCar).to.be.deep.equal(carMockForChangeWithId);
     })
 
-    it('_id not found', async () => {
+    it('_id invalid', async () => {
       let err: any;
 
       try {
@@ -98,16 +98,22 @@ describe('Car Model', () => {
       
       expect(err.message).to.be.eq(ErrorTypes.InvalidMongoId);
     })
+
+    it('_id not found', async () => {
+      const updated = await carModel.update(_id, carMockForChange);
+      
+      expect(updated).to.be.eq(null);
+    })
   })
 
   describe('excluding a car', () => {
     it('success', async () => {
-      const newCar = await carModel.delete(_id);
+      const result = await carModel.delete(_id);
  
-      expect(newCar).to.be.deep.equal(carMockWithId);
+      expect(result).to.be.deep.equal(carMockWithId);
     })
 
-    it('_id not found', async () => {
+    it('_id invalid', async () => {
       let err: any;
 
       try {
@@ -117,6 +123,12 @@ describe('Car Model', () => {
       }
       
       expect(err.message).to.be.eq(ErrorTypes.InvalidMongoId);
+    })
+
+    it('_id not found', async () => {
+      const result = await carModel.delete(_id);
+      
+      expect(result).to.be.eq(null);
     })
   })
 });
