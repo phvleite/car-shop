@@ -6,8 +6,6 @@ import chai from 'chai';
 import { Model } from 'mongoose';
 import CarModel from '../../../models/Car';
 import { carMock, carMockForChange, carMockForChangeWithId, carMockWithId } from '../../mocks/carMock';
-import { ICar } from '../../../interfaces/ICar';
-import { ZodError } from 'zod';
 import { ErrorTypes } from '../../../errors/catalog';
 
 const { expect } = chai;
