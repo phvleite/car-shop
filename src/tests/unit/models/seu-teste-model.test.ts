@@ -5,7 +5,7 @@ import chai from 'chai';
 
 import { Model } from 'mongoose';
 import CarModel from '../../../models/Car';
-import { carMock, carMockWithId } from '../../mocks/carMock';
+import { carMock, carMockForChange, carMockForChangeWithId, carMockWithId } from '../../mocks/carMock';
 import { ICar } from '../../../interfaces/ICar';
 import { ZodError } from 'zod';
 import { ErrorTypes } from '../../../errors/catalog';
@@ -27,6 +27,13 @@ describe('Car Model', () => {
       .onCall(0).resolves(carMockWithId)
       .onCall(1).resolves(null);
 
+    sinon.stub(Model, 'findByIdAndUpdate')
+      .onCall(0).resolves(carMockForChangeWithId)
+      .onCall(1).resolves(null);
+
+    sinon.stub(Model, 'findByIdAndDelete')
+      .onCall(0).resolves(carMockWithId)
+      .onCall(1).resolves(null);
   });
 
   after(()=>{
@@ -67,6 +74,46 @@ describe('Car Model', () => {
 
       try {
         await carModel.readOne('IdErrado');
+      } catch (error) {
+        err = error;
+      }
+      
+      expect(err.message).to.be.eq(ErrorTypes.InvalidMongoId);
+    })
+  })
+
+  describe('changing a car', () => {
+    it('success', async () => {
+      const newCar = await carModel.update(_id, carMockForChange);
+ 
+      expect(newCar).to.be.deep.equal(carMockForChangeWithId);
+    })
+
+    it('_id not found', async () => {
+      let err: any;
+
+      try {
+        await carModel.update('IdErrado', carMockForChange);
+      } catch (error) {
+        err = error;
+      }
+      
+      expect(err.message).to.be.eq(ErrorTypes.InvalidMongoId);
+    })
+  })
+
+  describe('excluding a car', () => {
+    it('success', async () => {
+      const newCar = await carModel.delete(_id);
+ 
+      expect(newCar).to.be.deep.equal(carMockWithId);
+    })
+
+    it('_id not found', async () => {
+      let err: any;
+
+      try {
+        await carModel.delete('IdErrado');
       } catch (error) {
         err = error;
       }
