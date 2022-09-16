@@ -34,11 +34,12 @@ abstract class MongoModel<T> implements IModel<T> {
       { _id },
       { ...obj } as UpdateQuery<T>,
       { new: true },
+      // { new: true, upsert: true, rawResult: true },
     );
 
     if (!updated) return null;
 
-    return updated as T;
+    return updated as unknown as T;
   }
 
   public async delete(_id: string): Promise<T | null> {

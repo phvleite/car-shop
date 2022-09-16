@@ -29,12 +29,13 @@ class CarService implements IService<ICar> {
   public async readOne(_id: string): Promise<ICar | null> {
     const car = await this._car.readOne(_id);
 
-    if (!car) throw new Error(ErrorTypes.EntityNotFound);
+    if (!car) throw new Error(ErrorTypes.ObjectNotFound);
 
     return car;  
   }
 
-  public async update(_id: string, obj: unknown): Promise<ICar | null> {
+  public async update(_id: string, obj: unknown): Promise<ICar & { _id: string } | null> {
+    // Promise<ICar & { _id: string } 
     const parsed = z.intersection(CarZodSchema, VehicleZodSchema).safeParse(obj);
 
     if (!parsed.success) {
@@ -43,15 +44,17 @@ class CarService implements IService<ICar> {
 
     const updated = await this._car.update(_id, parsed.data);
 
-    if (!updated) throw new Error(ErrorTypes.EntityNotFound);
+    if (!updated) throw new Error(ErrorTypes.ObjectNotFound);
 
-    return updated;
+    const { model, year, color, buyValue, seatsQty, doorsQty } = updated;
+
+    return { _id, model, year, color, buyValue, seatsQty, doorsQty } as ICar & { _id: string };
   }
 
   public async delete(_id: string): Promise<ICar | null> {
     const deleted = await this._car.delete(_id);
     
-    if (!deleted) throw new Error(ErrorTypes.EntityNotFound);
+    if (!deleted) throw new Error(ErrorTypes.ObjectNotFound);
 
     return deleted;
   }
