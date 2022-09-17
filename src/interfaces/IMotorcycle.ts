@@ -1,17 +1,10 @@
 import { z } from 'zod';
 import { VehicleZodSchema } from './IVehicle';
 
-enum Category {
-  Street,
-  Custom,
-  Trail,
-}
+const Category = ['Street', 'Custom', 'Trail'] as const;
 
 const MotorcycleZodSchema = z.object({
-  category: z.nativeEnum(Category, {
-    required_error: 'Category is required',
-    invalid_type_error: 'Category must be Street, Custom or Trail',
-  }),
+  category: z.enum(Category),
 
   engineCapacity: z.number({
     required_error: 'Engine Capacity quantity is required',
