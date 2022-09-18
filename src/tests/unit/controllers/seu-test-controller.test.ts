@@ -21,8 +21,8 @@ describe('Car Controller', () => {
   before(async () => {
     sinon.stub(carServie, 'create').resolves(carMockWithId);
     sinon.stub(carServie, 'read').resolves([carMockWithId]);
-    sinon.stub(carServie, 'readOne').resolves(carMockWithId);
-    sinon.stub(carServie, 'update').resolves(carMockWithId);
+    sinon.stub(carServie, 'readOne').resolves(carMock);
+    sinon.stub(carServie, 'update').resolves(carMockForChangeWithId);
     sinon.stub(carServie, 'delete').resolves(carMockWithId);
 
     res.status = sinon.stub().returns(res);
@@ -33,70 +33,68 @@ describe('Car Controller', () => {
     sinon.restore();
   })
 
-  describe('Create Controller', () => {
-    describe('Create Car', () => {
-      it('Success', async () => {
-        req.body = carMock;
-        await carController.create(req, res);
-  
-        const statusStub = res.status as sinon.SinonStub;
-        const jsonStub = res.json as sinon.SinonStub;
-  
-        expect(statusStub.calledWith(201)).to.be.true;
-        expect(jsonStub.calledWith(carMockWithId)).to.be.true;
-      });
-    });
+  describe('Create Car', () => {
+    it('Success', async () => {
+      req.body = carMock;
+      await carController.create(req, res);
 
-    describe('List All Cars', () => {
-      it('Success', async () => {
-        await carController.read(req, res);
-  
-        const statusStub = res.status as sinon.SinonStub;
-        const jsonStub = res.json as sinon.SinonStub;
-  
-        expect(statusStub.calledWith(200)).to.be.true;
-        expect(jsonStub.calledWith([carMockWithId])).to.be.true;
-      });
-    });
+      const statusStub = res.status as sinon.SinonStub;
+      const jsonStub = res.json as sinon.SinonStub;
 
-    describe('List Car by Id', () => {
-      it('Success', async () => {
-        req.params = { id: carMockForChangeWithId._id };
-        await carController.readOne(req, res);
-  
-        const statusStub = res.status as sinon.SinonStub;
-        const jsonStub = res.json as sinon.SinonStub;
-  
-        expect(statusStub.calledWith(200)).to.be.true;
-        expect(jsonStub.calledWith(carMockWithId)).to.be.true;
-      });
+      expect(statusStub.calledWith(201)).to.be.true;
+      expect(jsonStub.calledWith(carMockWithId)).to.be.true;
     });
+  });
 
-    describe('Update Car by Id', () => {
-      it('Success', async () => {
-        req.params = { id: carMockForChangeWithId._id };
-        req.body = carMock;
-        await carController.update(req, res);
-  
-        const statusStub = res.status as sinon.SinonStub;
-        const jsonStub = res.json as sinon.SinonStub;
-  
-        expect(statusStub.calledWith(200)).to.be.true;
-        expect(jsonStub.calledWith(carMockWithId)).to.be.true;
-      });
+  describe('List All Cars', () => {
+    it('Success', async () => {
+      await carController.read(req, res);
+
+      const statusStub = res.status as sinon.SinonStub;
+      const jsonStub = res.json as sinon.SinonStub;
+
+      expect(statusStub.calledWith(200)).to.be.true;
+      expect(jsonStub.calledWith([carMockWithId])).to.be.true;
     });
+  });
 
-    describe('Delete Car by Id', () => {
-      it('Success', async () => {
-        req.params = { id: carMockForChangeWithId._id };
-        await carController.delete(req, res);
-  
-        const statusStub = res.status as sinon.SinonStub;
-        const jsonStub = res.json as sinon.SinonStub;
-  
-        expect(statusStub.calledWith(200)).to.be.true;
-        expect(jsonStub.calledWith(carMockWithId)).to.be.true;
-      });
+  describe('List Car by Id', () => {
+    it('Success', async () => {
+      req.params = { id: carMockWithId._id };
+      await carController.readOne(req, res);
+
+      const statusStub = res.status as sinon.SinonStub;
+      const jsonStub = res.json as sinon.SinonStub;
+
+      expect(statusStub.calledWith(200)).to.be.true;
+      expect(jsonStub.calledWith(carMock)).to.be.true;
+    });
+  });
+
+  describe('Update Car by Id', () => {
+    it('Success', async () => {
+      req.params = { id: carMockForChangeWithId._id };
+      req.body = carMockForChange;
+      await carController.update(req, res);
+
+      const statusStub = res.status as sinon.SinonStub;
+      const jsonStub = res.json as sinon.SinonStub;
+
+      expect(statusStub.calledWith(200)).to.be.true;
+      expect(jsonStub.calledWith(carMockForChangeWithId)).to.be.true;
+    });
+  });
+
+  describe('Delete Car by Id', () => {
+    it('Success', async () => {
+      req.params = { id: carMockForChangeWithId._id };
+      await carController.delete(req, res);
+
+      const statusStub = res.status as sinon.SinonStub;
+      const jsonStub = res.json as sinon.SinonStub;
+
+      expect(statusStub.calledWith(200)).to.be.true;
+      expect(jsonStub.calledWith(carMockWithId)).to.be.true;
     });
   });
 });
