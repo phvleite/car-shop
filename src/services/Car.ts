@@ -35,7 +35,6 @@ class CarService implements IService<ICar> {
   }
 
   public async update(_id: string, obj: unknown): Promise<ICar & { _id: string } | null> {
-    // Promise<ICar & { _id: string } 
     const parsed = z.intersection(CarZodSchema, VehicleZodSchema).safeParse(obj);
 
     if (!parsed.success) {
