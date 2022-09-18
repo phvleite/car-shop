@@ -13,17 +13,17 @@ const { expect } = chai;
 
 describe('Car Controller', () => {
   const carModel = new CarModel();
-  const carServie = new CarService(carModel);
+  const carService = new CarService(carModel);
   const carController = new CarController(carServie);
   const req = {} as Request;
   const res = {} as Response;
 
   before(async () => {
-    sinon.stub(carServie, 'create').resolves(carMockWithId);
-    sinon.stub(carServie, 'read').resolves([carMockWithId]);
-    sinon.stub(carServie, 'readOne').resolves(carMock);
-    sinon.stub(carServie, 'update').resolves(carMockForChangeWithId);
-    sinon.stub(carServie, 'delete').resolves(carMockWithId);
+    sinon.stub(carService, 'create').resolves(carMockWithId);
+    sinon.stub(carService, 'read').resolves([carMockWithId]);
+    sinon.stub(carService, 'readOne').resolves(carMock);
+    sinon.stub(carService, 'update').resolves(carMockForChangeWithId);
+    sinon.stub(carService, 'delete').resolves(carMockWithId);
 
     res.status = sinon.stub().returns(res);
     res.json = sinon.stub().returns(res);
