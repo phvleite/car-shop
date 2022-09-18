@@ -14,7 +14,7 @@ const { expect } = chai;
 describe('Car Controller', () => {
   const carModel = new CarModel();
   const carService = new CarService(carModel);
-  const carController = new CarController(carServie);
+  const carController = new CarController(carService);
   const req = {} as Request;
   const res = {} as Response;
 
