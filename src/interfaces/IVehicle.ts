@@ -13,8 +13,8 @@ const VehicleZodSchema = z.object({
     message: 'Year must be integer',
   }).gte(1900, {
     message: 'Year must be greater than or equal to 1900',
-  }).lte(2022, {
-    message: 'Year must be less than or equal to 2022',
+  }).lte(2030, {
+    message: 'Year must be less than or equal to 2030',
   }),
 
   color: z.string({

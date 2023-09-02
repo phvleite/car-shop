@@ -9,8 +9,8 @@ const CarZodSchema = z.object({
     message: 'Doors quantity must be integer',
   }).gte(2, {
     message: 'Doors quantity must be greater than or equal to 2',
-  }).lte(4, {
-    message: 'Doors quantity must be less than or equal to 4',
+  }).lte(5, {
+    message: 'Doors quantity must be less than or equal to 5',
   }),
 
   seatsQty: z.number({
