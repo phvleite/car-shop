@@ -206,7 +206,7 @@ describe('Car Service', () => {
       let errCar: any;
       const carMockInvalid = {
         model: 'Ferrari Purosangue',
-        year: 2030,
+        year: 2035,
         color: 'Red',
         buyValue: 950000,
         doorsQty: 4,
@@ -220,7 +220,7 @@ describe('Car Service', () => {
       };
   
       expect(errCar).to.be.instanceOf(ZodError);
-      expect(errCar.issues[0].message).to.be.equal("Year must be less than or equal to 2022");
+      expect(errCar.issues[0].message).to.be.equal("Year must be less than or equal to 2030");
     });
   });
 
@@ -295,7 +295,7 @@ describe('Car Service', () => {
       };
   
       expect(errCar).to.be.instanceOf(ZodError);
-      expect(errCar.issues[0].message).to.be.equal("Doors quantity must be less than or equal to 4");
+      expect(errCar.issues[0].message).to.be.equal("Doors quantity must be less than or equal to 5");
     });
   })
 
